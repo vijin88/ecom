@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        Welcome to E-Shopping Store.
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+    {% if category %}
+        {{ category.name }} in E-Shopping Store
+    {% else %}
+        New Collections in  E-Shopping Store.
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if category %}
+<div xmlns="http://www.w3.org/1999/html">
+            <div class="row my_row_class">
+                <div class="mx-auto">
+                    <p><a href="{% url 'shop:allProdCat' %}">our product collection</a></p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div class="mx-auto">
+        {% if category %}
+            <div>
+                <img class="my_image" src="{{category.image.url}}" alt="{{category.name}}" height="100" width="100">
+            </div>
+            <br>
+            <div>
+                <h1 class="text-center my_title">{{category.name}}</h1>
+                <p class="text-justify">{{category.description}}</p>
+            </div>
+        {% else %}
+            <div>
+                <img class="my_image my_image_padding" src="{% static 'img/E-Shop_banner.png' %}" alt="Our Products" height="300" width="1100">
+            </div>
+            <br>
+            <div>
+                <h1 class="text-center my_title">Our Product Collection</h1>
+                <p class="text-justify">As the order is placed, the customer's web browser will communicate back and forth with the server hosting the e-commerce website. Data pertaining to the order will be relayed to a central computer known as the order manager. It will then be forwarded to databases that manage inventory levels; a merchant system that manages payment information, using applications such as PayPal; and a bank computer. Finally, it will circle back to the order manager. This is to make sure that store inventory and customer funds are sufficient for the order to be processed.</p>
+            </div>
+        {% endif %}
+    </div>
+    <div class="container">
+        <div class="row mx_auto">
+            {% for product in products.object_list %}
+                <div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-md-12 col-lg-4">
+                    <div class="card text-center" style="min-width:18rem;">
+                        <a href="{{product.get_url}}"><img  src="{{product.image.url}}" alt="{{product.name}}" height="100" width="100"></a>
+                        <div class="card-body">
+                            <h6>{{product.name}}</h6>
+                            <p>{{product.price}}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="mx-auto">
+            {% if products.paginator.num_pages > 1  %}
+            <hr>
+            <div class="text-center">
+                {% for pg in products.paginator.page_range %}
+                    <a href="?page={{pg}}" class="btn btn-light btn-sm" {% if products.number == pg %} active {% endif %}>{{pg}}</a>
+                {% endfor %}
+
+            </div>
+              {% endif %}
+        </div>
+        </br>
+
+    </div>
+{% endblock %}
